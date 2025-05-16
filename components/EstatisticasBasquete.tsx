@@ -23,9 +23,7 @@ type FormState = {
 
 export default function EstatisticasBasquete() {
   const [jogadores, setJogadores] = useState<Jogador[]>([
-    { id: 1, nome: "Lucas Silva", pontos: 18, rebotes: 7, assistencias: 5, jogos: 3 },
-    { id: 2, nome: "Marcos Lima", pontos: 26, rebotes: 10, assistencias: 3, jogos: 4 },
-    { id: 3, nome: "Carlos Souza", pontos: 10, rebotes: 5, assistencias: 8, jogos: 2 },
+    { id: 1, nome: "Murilo Cunha", pontos: 18, rebotes: 7, assistencias: 5, jogos: 3 },
   ]);
 
   const [form, setForm] = useState<FormState>({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
