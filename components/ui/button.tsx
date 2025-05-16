@@ -1,19 +1,24 @@
-import React from "react";
+import React, { ReactNode, ButtonHTMLAttributes } from "react";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: ReactNode;
   variant?: "default" | "outline" | "destructive";
-  children: React.ReactNode;
-}
+  className?: string;
+};
 
-export function Button({ variant = "default", children, className = "", ...props }: ButtonProps) {
-  let baseClass = "px-4 py-2 rounded font-semibold transition ";
+export function Button({ children, variant = "default", className = "", ...props }: ButtonProps) {
+  let baseClasses = "px-4 py-2 rounded-md font-semibold focus:outline-none ";
 
-  if (variant === "default") baseClass += "bg-blue-600 text-white hover:bg-blue-700";
-  if (variant === "outline") baseClass += "border border-gray-500 text-gray-700 hover:bg-gray-100";
-  if (variant === "destructive") baseClass += "bg-red-600 text-white hover:bg-red-700";
+  if (variant === "outline") {
+    baseClasses += "border border-gray-400 ";
+  } else if (variant === "destructive") {
+    baseClasses += "bg-red-600 text-white hover:bg-red-700 ";
+  } else {
+    baseClasses += "bg-blue-600 text-white hover:bg-blue-700 ";
+  }
 
   return (
-    <button className={`${baseClass} ${className}`} {...props}>
+    <button className={`${baseClasses} ${className}`} {...props}>
       {children}
     </button>
   );
