@@ -4,22 +4,41 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 
+// Tipo para um jogador
+type Jogador = {
+  id: number;
+  nome: string;
+  pontos: number;
+  rebotes: number;
+  assistencias: number;
+  jogos: number;
+};
+
+// Tipo para os formulários
+type FormularioJogador = {
+  nome: string;
+  pontos: string;
+  rebotes: string;
+  assistencias: string;
+  jogos: string;
+};
+
 export default function EstatisticasBasquete() {
-  const [jogadores, setJogadores] = useState([
+  const [jogadores, setJogadores] = useState<Jogador[]>([
     { id: 1, nome: "Lucas Silva", pontos: 18, rebotes: 7, assistencias: 5, jogos: 3 },
     { id: 2, nome: "Marcos Lima", pontos: 26, rebotes: 10, assistencias: 3, jogos: 4 },
     { id: 3, nome: "Carlos Souza", pontos: 10, rebotes: 5, assistencias: 8, jogos: 2 },
   ]);
 
-  const [form, setForm] = useState({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
-  const [editandoId, setEditandoId] = useState(null);
-  const [formEdicao, setFormEdicao] = useState({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
+  const [form, setForm] = useState<FormularioJogador>({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
+  const [editandoId, setEditandoId] = useState<number | null>(null);
+  const [formEdicao, setFormEdicao] = useState<FormularioJogador>({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
 
- const calcularMedia = (total: number, jogos: number): string => 
-  jogos ? (total / jogos).toFixed(1) : "0.0";
+  const calcularMedia = (total: number, jogos: number): string =>
+    jogos ? (total / jogos).toFixed(1) : "0.0";
 
   const adicionarJogador = () => {
-    const novoJogador = {
+    const novoJogador: Jogador = {
       id: jogadores.length + 1,
       nome: form.nome,
       pontos: parseInt(form.pontos),
@@ -31,14 +50,14 @@ export default function EstatisticasBasquete() {
     setForm({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
   };
 
-  const iniciarEdicao = (jogador) => {
+  const iniciarEdicao = (jogador: Jogador) => {
     setEditandoId(jogador.id);
     setFormEdicao({
       nome: jogador.nome,
-      pontos: jogador.pontos,
-      rebotes: jogador.rebotes,
-      assistencias: jogador.assistencias,
-      jogos: jogador.jogos,
+      pontos: jogador.pontos.toString(),
+      rebotes: jogador.rebotes.toString(),
+      assistencias: jogador.assistencias.toString(),
+      jogos: jogador.jogos.toString(),
     });
   };
 
@@ -66,7 +85,7 @@ export default function EstatisticasBasquete() {
     setFormEdicao({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
   };
 
-  const excluirJogador = (id) => {
+  const excluirJogador = (id: number) => {
     setJogadores(jogadores.filter((j) => j.id !== id));
   };
 
