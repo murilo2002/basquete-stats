@@ -15,7 +15,8 @@ export default function EstatisticasBasquete() {
   const [editandoId, setEditandoId] = useState(null);
   const [formEdicao, setFormEdicao] = useState({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
 
-  const calcularMedia = (total, jogos) => (jogos ? (total / jogos).toFixed(1) : "0.0");
+ const calcularMedia = (total: number, jogos: number): string => 
+  jogos ? (total / jogos).toFixed(1) : "0.0";
 
   const adicionarJogador = () => {
     const novoJogador = {
