@@ -1,14 +1,22 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
-interface CardProps {
-  children: React.ReactNode;
+type CardProps = {
+  children: ReactNode;
   className?: string;
-}
+};
 
 export function Card({ children, className = "" }: CardProps) {
-  return <div className={`bg-white border rounded shadow ${className}`}>{children}</div>;
+  return (
+    <div className={`bg-white shadow-md rounded-md ${className}`}>
+      {children}
+    </div>
+  );
 }
 
-export function CardContent({ children, className = "" }: CardProps) {
-  return <div className={`p-4 ${className}`}>{children}</div>;
+export function CardContent({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={className}>
+      {children}
+    </div>
+  );
 }
