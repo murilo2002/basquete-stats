@@ -1,1 +1,7 @@
-export const Input = (props) => <input className='border p-2 rounded' {...props} />;
+import React from "react";
+
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+
+export function Input(props: InputProps) {
+  return <input {...props} />;
+}
