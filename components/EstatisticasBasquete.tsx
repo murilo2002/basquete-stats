@@ -1,37 +1,55 @@
 "use client";
-import { useState } from "react";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
+import { useState, ChangeEvent } from "react";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+
+type Jogador = {
+  id: number;
+  nome: string;
+  pontos: number;
+  rebotes: number;
+  assistencias: number;
+  jogos: number;
+};
+
+type FormState = {
+  nome: string;
+  pontos: string;
+  rebotes: string;
+  assistencias: string;
+  jogos: string;
+};
 
 export default function EstatisticasBasquete() {
-  const [jogadores, setJogadores] = useState([
+  const [jogadores, setJogadores] = useState<Jogador[]>([
     { id: 1, nome: "Lucas Silva", pontos: 18, rebotes: 7, assistencias: 5, jogos: 3 },
     { id: 2, nome: "Marcos Lima", pontos: 26, rebotes: 10, assistencias: 3, jogos: 4 },
     { id: 3, nome: "Carlos Souza", pontos: 10, rebotes: 5, assistencias: 8, jogos: 2 },
   ]);
 
-  const [form, setForm] = useState({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
+  const [form, setForm] = useState<FormState>({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
   const [editandoId, setEditandoId] = useState<number | null>(null);
-  const [formEdicao, setFormEdicao] = useState({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
+  const [formEdicao, setFormEdicao] = useState<FormState>({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
 
-  const calcularMedia = (total: number, jogos: number): string => 
+  const calcularMedia = (total: number, jogos: number): string =>
     jogos ? (total / jogos).toFixed(1) : "0.0";
 
   const adicionarJogador = () => {
-    const novoJogador = {
+    if (!form.nome) return; // validação simples
+    const novoJogador: Jogador = {
       id: jogadores.length + 1,
       nome: form.nome,
-      pontos: Number(form.pontos),
-      rebotes: Number(form.rebotes),
-      assistencias: Number(form.assistencias),
-      jogos: Number(form.jogos),
+      pontos: parseInt(form.pontos) || 0,
+      rebotes: parseInt(form.rebotes) || 0,
+      assistencias: parseInt(form.assistencias) || 0,
+      jogos: parseInt(form.jogos) || 0,
     };
     setJogadores([...jogadores, novoJogador]);
     setForm({ nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "" });
   };
 
-  const iniciarEdicao = (jogador: typeof jogadores[0]) => {
+  const iniciarEdicao = (jogador: Jogador) => {
     setEditandoId(jogador.id);
     setFormEdicao({
       nome: jogador.nome,
@@ -49,10 +67,10 @@ export default function EstatisticasBasquete() {
           ? {
               ...j,
               nome: formEdicao.nome,
-              pontos: Number(formEdicao.pontos),
-              rebotes: Number(formEdicao.rebotes),
-              assistencias: Number(formEdicao.assistencias),
-              jogos: Number(formEdicao.jogos),
+              pontos: parseInt(formEdicao.pontos) || 0,
+              rebotes: parseInt(formEdicao.rebotes) || 0,
+              assistencias: parseInt(formEdicao.assistencias) || 0,
+              jogos: parseInt(formEdicao.jogos) || 0,
             }
           : j
       )
@@ -70,109 +88,59 @@ export default function EstatisticasBasquete() {
     setJogadores(jogadores.filter((j) => j.id !== id));
   };
 
-  return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Cadastrar novo jogador</h1>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <Input
-          placeholder="Nome"
-          value={form.nome}
-          onChange={(e) => setForm({ ...form, nome: e.target.value })}
-          className="border rounded p-2"
-        />
-        <Input
-          placeholder="Pontos"
-          value={form.pontos}
-          onChange={(e) => setForm({ ...form, pontos: e.target.value })}
-          className="border rounded p-2"
-          type="number"
-        />
-        <Input
-          placeholder="Rebotes"
-          value={form.rebotes}
-          onChange={(e) => setForm({ ...form, rebotes: e.target.value })}
-          className="border rounded p-2"
-          type="number"
-        />
-        <Input
-          placeholder="Assistências"
-          value={form.assistencias}
-          onChange={(e) => setForm({ ...form, assistencias: e.target.value })}
-          className="border rounded p-2"
-          type="number"
-        />
-        <Input
-          placeholder="Jogos"
-          value={form.jogos}
-          onChange={(e) => setForm({ ...form, jogos: e.target.value })}
-          className="border rounded p-2"
-          type="number"
-        />
-      </div>
-      <Button className="mb-8" onClick={adicionarJogador}>
-        Adicionar jogador
-      </Button>
+  // Tipagem para eventos onChange dos inputs
+  const handleChangeForm = (e: ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.placeholder.toLowerCase()]: e.target.value });
+  };
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+  const handleChangeFormEdicao = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormEdicao({ ...formEdicao, [e.target.placeholder.toLowerCase()]: e.target.value });
+  };
+
+  return (
+    <div className="p-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">Cadastrar novo jogador</h2>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-2">
+          <Input placeholder="Nome" value={form.nome} onChange={handleChangeForm} />
+          <Input placeholder="Pontos" value={form.pontos} onChange={handleChangeForm} />
+          <Input placeholder="Rebotes" value={form.rebotes} onChange={handleChangeForm} />
+          <Input placeholder="Assistências" value={form.assistencias} onChange={handleChangeForm} />
+          <Input placeholder="Jogos" value={form.jogos} onChange={handleChangeForm} />
+        </div>
+        <Button onClick={adicionarJogador}>Adicionar jogador</Button>
+      </div>
+
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {jogadores.map((jogador) => (
-          <Card key={jogador.id} className="shadow-lg rounded-xl">
+          <Card key={jogador.id} className="shadow-lg rounded-2xl">
             <CardContent className="p-4">
               {editandoId === jogador.id ? (
-                <div className="space-y-3">
-                  <Input
-                    value={formEdicao.nome}
-                    onChange={(e) => setFormEdicao({ ...formEdicao, nome: e.target.value })}
-                    className="border rounded p-2"
-                  />
-                  <Input
-                    value={formEdicao.pontos}
-                    onChange={(e) => setFormEdicao({ ...formEdicao, pontos: e.target.value })}
-                    className="border rounded p-2"
-                    type="number"
-                  />
-                  <Input
-                    value={formEdicao.rebotes}
-                    onChange={(e) => setFormEdicao({ ...formEdicao, rebotes: e.target.value })}
-                    className="border rounded p-2"
-                    type="number"
-                  />
-                  <Input
-                    value={formEdicao.assistencias}
-                    onChange={(e) => setFormEdicao({ ...formEdicao, assistencias: e.target.value })}
-                    className="border rounded p-2"
-                    type="number"
-                  />
-                  <Input
-                    value={formEdicao.jogos}
-                    onChange={(e) => setFormEdicao({ ...formEdicao, jogos: e.target.value })}
-                    className="border rounded p-2"
-                    type="number"
-                  />
-                  <div className="flex gap-3 mt-4">
+                <div className="grid gap-2">
+                  <Input value={formEdicao.nome} placeholder="Nome" onChange={handleChangeFormEdicao} />
+                  <Input value={formEdicao.pontos} placeholder="Pontos" onChange={handleChangeFormEdicao} />
+                  <Input value={formEdicao.rebotes} placeholder="Rebotes" onChange={handleChangeFormEdicao} />
+                  <Input value={formEdicao.assistencias} placeholder="Assistências" onChange={handleChangeFormEdicao} />
+                  <Input value={formEdicao.jogos} placeholder="Jogos" onChange={handleChangeFormEdicao} />
+                  <div className="flex gap-2 mt-2">
                     <Button onClick={salvarEdicao}>Salvar</Button>
-                    <Button variant="outline" onClick={cancelarEdicao}>
-                      Cancelar
-                    </Button>
-                    <Button variant="destructive" onClick={() => excluirJogador(jogador.id)}>
-                      Excluir
-                    </Button>
+                    <Button variant="outline" onClick={cancelarEdicao}>Cancelar</Button>
+                    <Button variant="destructive" onClick={() => excluirJogador(jogador.id)}>Excluir</Button>
                   </div>
                 </div>
               ) : (
                 <>
-                  <h2 className="text-xl font-semibold mb-3">{jogador.nome}</h2>
+                  <h2 className="text-xl font-semibold mb-2">{jogador.nome}</h2>
                   <p>Jogos: {jogador.jogos}</p>
                   <p>Pontos totais: {jogador.pontos}</p>
                   <p>Rebotes: {jogador.rebotes}</p>
                   <p>Assistências: {jogador.assistencias}</p>
-                  <div className="mt-3 border-t pt-2 text-sm text-gray-600 space-y-1">
+                  <div className="mt-2 border-t pt-2 text-sm text-gray-600">
                     <p>Média de pontos: {calcularMedia(jogador.pontos, jogador.jogos)}</p>
                     <p>Média de rebotes: {calcularMedia(jogador.rebotes, jogador.jogos)}</p>
                     <p>Média de assistências: {calcularMedia(jogador.assistencias, jogador.jogos)}</p>
                   </div>
-                  <Button className="mt-4" onClick={() => iniciarEdicao(jogador)}>
-                    Editar
-                  </Button>
+                  <Button className="mt-2" onClick={() => iniciarEdicao(jogador)}>Editar</Button>
                 </>
               )}
             </CardContent>
