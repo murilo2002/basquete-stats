@@ -1,10 +1,9 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 
-// Tipos
 type Jogador = {
   id: number;
   nome: string;
@@ -14,7 +13,7 @@ type Jogador = {
   jogos: number;
 };
 
-type Formulario = {
+type FormState = {
   nome: string;
   pontos: string;
   rebotes: string;
@@ -29,27 +28,26 @@ export default function EstatisticasBasquete() {
     { id: 3, nome: "Carlos Souza", pontos: 10, rebotes: 5, assistencias: 8, jogos: 2 },
   ]);
 
-  const [form, setForm] = useState<Formulario>({
-    nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "",
+  const [form, setForm] = useState<FormState>({
+    nome: "",
+    pontos: "",
+    rebotes: "",
+    assistencias: "",
+    jogos: "",
   });
 
   const [editandoId, setEditandoId] = useState<number | null>(null);
 
-  const [formEdicao, setFormEdicao] = useState<Formulario>({
-    nome: "", pontos: "", rebotes: "", assistencias: "", jogos: "",
+  const [formEdicao, setFormEdicao] = useState<FormState>({
+    nome: "",
+    pontos: "",
+    rebotes: "",
+    assistencias: "",
+    jogos: "",
   });
 
   const calcularMedia = (total: number, jogos: number): string =>
     jogos ? (total / jogos).toFixed(1) : "0.0";
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, tipo: "novo" | "editar") => {
-    const { name, value } = e.target;
-    if (tipo === "novo") {
-      setForm({ ...form, [name]: value });
-    } else {
-      setFormEdicao({ ...formEdicao, [name]: value });
-    }
-  };
 
   const adicionarJogador = () => {
     const novoJogador: Jogador = {
@@ -108,11 +106,31 @@ export default function EstatisticasBasquete() {
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">Cadastrar novo jogador</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-2">
-          <Input name="nome" placeholder="Nome" value={form.nome} onChange={(e) => handleChange(e, "novo")} />
-          <Input name="pontos" placeholder="Pontos" value={form.pontos} onChange={(e) => handleChange(e, "novo")} />
-          <Input name="rebotes" placeholder="Rebotes" value={form.rebotes} onChange={(e) => handleChange(e, "novo")} />
-          <Input name="assistencias" placeholder="Assistências" value={form.assistencias} onChange={(e) => handleChange(e, "novo")} />
-          <Input name="jogos" placeholder="Jogos" value={form.jogos} onChange={(e) => handleChange(e, "novo")} />
+          <Input
+            placeholder="Nome"
+            value={form.nome}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, nome: e.target.value })}
+          />
+          <Input
+            placeholder="Pontos"
+            value={form.pontos}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, pontos: e.target.value })}
+          />
+          <Input
+            placeholder="Rebotes"
+            value={form.rebotes}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, rebotes: e.target.value })}
+          />
+          <Input
+            placeholder="Assistências"
+            value={form.assistencias}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, assistencias: e.target.value })}
+          />
+          <Input
+            placeholder="Jogos"
+            value={form.jogos}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, jogos: e.target.value })}
+          />
         </div>
         <Button onClick={adicionarJogador}>Adicionar jogador</Button>
       </div>
@@ -123,11 +141,26 @@ export default function EstatisticasBasquete() {
             <CardContent className="p-4">
               {editandoId === jogador.id ? (
                 <div className="grid gap-2">
-                  <Input name="nome" value={formEdicao.nome} onChange={(e) => handleChange(e, "editar")} />
-                  <Input name="pontos" value={formEdicao.pontos} onChange={(e) => handleChange(e, "editar")} />
-                  <Input name="rebotes" value={formEdicao.rebotes} onChange={(e) => handleChange(e, "editar")} />
-                  <Input name="assistencias" value={formEdicao.assistencias} onChange={(e) => handleChange(e, "editar")} />
-                  <Input name="jogos" value={formEdicao.jogos} onChange={(e) => handleChange(e, "editar")} />
+                  <Input
+                    value={formEdicao.nome}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormEdicao({ ...formEdicao, nome: e.target.value })}
+                  />
+                  <Input
+                    value={formEdicao.pontos}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormEdicao({ ...formEdicao, pontos: e.target.value })}
+                  />
+                  <Input
+                    value={formEdicao.rebotes}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormEdicao({ ...formEdicao, rebotes: e.target.value })}
+                  />
+                  <Input
+                    value={formEdicao.assistencias}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormEdicao({ ...formEdicao, assistencias: e.target.value })}
+                  />
+                  <Input
+                    value={formEdicao.jogos}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormEdicao({ ...formEdicao, jogos: e.target.value })}
+                  />
                   <div className="flex gap-2 mt-2">
                     <Button onClick={salvarEdicao}>Salvar</Button>
                     <Button variant="outline" onClick={cancelarEdicao}>Cancelar</Button>
