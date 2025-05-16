@@ -2,11 +2,12 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./app/**/*.{ts,tsx,js,jsx}",      // inclui pastas e arquivos do app
-    "./components/**/*.{ts,tsx,js,jsx}" // inclui componentes
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./pages/**/*.{ts,tsx}",
   ],
   theme: {
-    extend: {}, // caso queira personalizar depois
+    extend: {},
   },
   plugins: [],
 };
